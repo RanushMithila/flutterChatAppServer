@@ -10,5 +10,3 @@ const schema = mongoose.Schema(
 
 const message = mongoose.model('key', schema);
 module.exports = message;
-
-//test
