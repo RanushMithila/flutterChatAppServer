@@ -79,6 +79,12 @@ io.on('connection', (socket) => {
             console.log("User is not online");
         }
     });
+
+    //reciving requested public key
+    socket.on('respub', (data) => {
+        console.log(data);
+        //complete other part
+    });
 });
 
 
@@ -113,6 +119,27 @@ app.get('/getdata', async (req, res) => {
 //read spesific data
 app.get('/getdata/:id', async (req, res) => {
     const { id } = req.params;
+    MessageModel.find({ targetId: id })
+        .then(messages => {
+            console.log(messages);
+            res.status(200).json(messages);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+//get public key
+
+app.post('/getkey', async (req, res) => {
+    const { sourseId, targetId } = req.body;
+
+    if (clients[targetId]) {
+        clients[targetId].emit('reqpub', msg);
+    } else {
+        //search with previous data
+
+    }
     MessageModel.find({ targetId: id })
         .then(messages => {
             console.log(messages);
