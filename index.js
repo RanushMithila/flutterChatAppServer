@@ -81,8 +81,23 @@ io.on('connection', (socket) => {
     });
 
     //reciving requested public key
-    socket.on('respub', (data) => {
+    socket.on('pubKey', (data) => {
         console.log(data);
+        try {
+            const savePub = UserModel.create({
+                userID: data.userID,
+                PublicKey: data.PublicKey,
+            });
+
+        } catch (error) {
+            console.log("user not online");
+        }
+        //complete other part
+    });
+
+    //reciving requested public key
+    socket.on('respub', (data) => {
+        console.log("public key " + data["user"] + " : " + data["pub"]);
         //complete other part
     });
 });
@@ -129,26 +144,6 @@ app.get('/getdata/:id', async (req, res) => {
         });
 });
 
-//get public key
-
-app.post('/getkey', async (req, res) => {
-    const { sourseId, targetId } = req.body;
-
-    if (clients[targetId]) {
-        clients[targetId].emit('reqpub', msg);
-    } else {
-        //search with previous data
-
-    }
-    MessageModel.find({ targetId: id })
-        .then(messages => {
-            console.log(messages);
-            res.status(200).json(messages);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-});
 
 
 
