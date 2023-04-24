@@ -83,17 +83,38 @@ io.on('connection', (socket) => {
     //reciving requested public key
     socket.on('pubKey', (data) => {
         console.log(data);
-        try {
-            const savePub = UserModel.create({
-                userID: data.userID,
-                PublicKey: data.PublicKey,
-            });
-
-        } catch (error) {
-            console.log("user not online");
-        }
-        //complete other part
+        savePubKey(data);
     });
+
+    //saving public keys to the database only if the key is not in the database
+    async function savePubKey(data) {
+        const findPK = await UserModel.findOne({ userID: data["userID"] });
+        if (findPK) {
+            console.log("public key already exist");
+            if (findPK.PublicKey != data["PublicKey"]) {
+                console.log("but,public key changed. so trying to update it...");
+                try {
+                    findPK.PublicKey = data["PublicKey"];
+                    const savePub = await findPK.save();
+                    console.log("public key updated");
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+        } else {
+            console.log("public key not exist, so trying to save it...");
+            try {
+                const savePub = UserModel.create({
+                    userID: data.userID,
+                    PublicKey: data.PublicKey,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+    }
 
     //reciving requested public key
     socket.on('respub', (data) => {
