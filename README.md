@@ -1,6 +1,6 @@
 # Chat App Server
 
 
-# Languages
+# Languages & Tools
 
-![NodeJS,Socket.io, MongoDB, ExpressJS](https://skills.thijs.gg/icons?i=nodejs,mongodb,expressjs)
+![NodeJS,Socket.io, MongoDB, ExpressJS, VS Code](https://skills.thijs.gg/icons?i=nodejs,mongodb,expressjs,vscode)
