@@ -80,7 +80,36 @@ io.on('connection', (socket) => {
         }
     });
 
-    //reciving requested public key
+    socket.on('reqpub', (data) => {
+        console.log(data);
+        var toSend = data["user"];
+        //find public key from the database
+        UserModel.findOne({ userID: data["targetUser"] })
+            .then(user => {
+                if (user) {
+                    console.log("public key found");
+                    var pub = { "user": data["user"], "pub": user.PublicKey };
+                    try {
+                        clients[toSend].emit('respub', { "publicKey": pub });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    console.log("public key not found");
+                    try {
+                        clients[toSend].emit('respub', { "publicKey": "Oops! public key not found" });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    });
+
+
+    //users send their public key to the server
     socket.on('pubKey', (data) => {
         console.log(data);
         savePubKey(data);
