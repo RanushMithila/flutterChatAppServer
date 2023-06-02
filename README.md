@@ -16,4 +16,5 @@
 ### Message Sending
 
 All the messages are encrypted.
+
 ![Send message](./img/send_msg.png)
